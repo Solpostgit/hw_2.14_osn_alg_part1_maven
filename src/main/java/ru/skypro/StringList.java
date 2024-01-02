@@ -78,4 +78,6 @@ public interface StringList {
     // из строк в списке
     // и вернуть его.
     String[] toArray();
+
+    void add(String number, String number1, String number2);
 }

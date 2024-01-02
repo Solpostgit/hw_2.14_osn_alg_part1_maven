@@ -1,24 +1,58 @@
 package ru.skypro;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static ru.skypro.TestConstants.ITEM_LAST_5;
 
 public class StringListImplTest {
 
-    @Test
-    public String add(String item) {
-//        validateSize();
-//        validateItem(item);
-//        storage[size++] = item;
-        return item;
+    private StringList list = new StringListImpl();
+
+    private void setStringList() {
+        list.add("0", "1", "2", "3", "4", "5", "6", "7");
     }
 
     @Test
-    public int indexOf(String item) {
-//        for (int i = 0; i < size; i++) {
-//            if (storage[i].equals(item)) {
-//                return i;
-//            }
-//        }
-        return -1;
+    void constructorWithNegativeCapacityExceptionTest() {
+        assertThrows(IllegalCapacityException.class, () -> new StringListImpl(-1));
+        assertThrows(IllegalCapacityException.class, () -> new StringListImpl(0));
     }
+
+    @Test
+    @BeforeEach
+    void clearMethodShouldMakeStringListEmpty() {
+        list.clear();
+        assertTrue(list.isEmpty());
+    }
+
+    @Test
+    void addMethodShouldAddStringToStringListAndReturnAddedString() {
+        String expected = "первый";
+        assertEquals(expected, list.add("первый"));
+        expected = "второй";
+        assertEquals(expected, list.add("второй"));
+        expected = "[первый, второй]";
+        assertEquals(expected, list.toString());
+    }
+
+    @Test
+    void addMethodShouldThrowExceptionWhenReceivesNullAsArgument() {
+        String s = null;
+        assertThrows(NothingToAddException.class, () -> list.add(s));
+    }
+
+    @Test
+    void addMethodShouldThrowExceptionWhenNoArgumentsArePassed() {
+        assertThrows(NothingToAddException.class, () -> list.add());
+    }
+
+    @Test
+    void addMethodShouldThrowExceptionWhenTooManyStringsArePassed() {
+        setStringList();
+        assertThrows(InsufficientCapacityException.class, () -> list.add("8", "9", "10"));
+    }
+
 }
+
